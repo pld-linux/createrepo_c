@@ -1,0 +1,152 @@
+--- createrepo_c/src/misc.c.orig	2013-12-01 15:00:42.000000000 +0100
++++ createrepo_c/src/misc.c	2013-12-01 16:18:48.713931227 +0100
+@@ -30,7 +30,7 @@
+ #include <ftw.h>
+ #include <time.h>
+ #include <curl/curl.h>
+-#include <rpm/rpmlib.h>
++#include <rpm/rpmevr.h>
+ #include "error.h"
+ #include "misc.h"
+ 
+--- createrepo_c/CMakeLists.txt.orig	2013-12-01 15:00:42.000000000 +0100
++++ createrepo_c/CMakeLists.txt	2013-12-01 16:21:27.510591230 +0100
+@@ -39,7 +39,7 @@
+ 
+ include_directories(${GLIB2_INCLUDE_DIRS})
+ include_directories(${LIBXML2_INCLUDE_DIR})
+-
++include_directories("/usr/include/rpm")
+ 
+ # rpm:
+ 
+--- createrepo_c/src/parsehdr.h.orig	2013-12-01 15:00:42.000000000 +0100
++++ createrepo_c/src/parsehdr.h	2013-12-01 16:55:23.000505810 +0100
+@@ -24,7 +24,7 @@
+ extern "C" {
+ #endif
+ 
+-#include <rpm/rpmlib.h>
++#include <rpm/rpmtag.h>
+ #include <glib.h>
+ #include "package.h"
+ #include "xml_dump.h"
+--- createrepo_c/src/parsehdr.c.orig	2013-12-01 15:00:42.000000000 +0100
++++ createrepo_c/src/parsehdr.c	2013-12-01 16:33:26.753894379 +0100
+@@ -19,6 +19,7 @@
+ 
+ #include <glib.h>
+ #include <assert.h>
++#include <rpm/rpm46compat.h>
+ #include <rpm/rpmfi.h>
+ #include <stdlib.h>
+ #include "parsehdr.h"
+@@ -26,6 +27,76 @@
+ #include "misc.h"
+ 
+ 
++static inline void* rpmtdNew(void)
++{
++    return malloc(sizeof(struct rpmtd_s));
++}
++
++static inline void rpmtdFree(rpmtd td)
++{
++    return free(td);
++}
++
++static inline void rpmtdInit(rpmtd td)
++{
++    rpmtdReset(td);
++}
++
++static inline const char * headerGetString(Header h, int32_t tag)
++{
++    const char *res = NULL;
++    struct rpmtd_s td;
++
++    if (headerGet(h, tag, &td, HEADERGET_MINMEM)) {
++	if (rpmtdCount(&td) == 1) {
++	    res = rpmtdGetString(&td);
++	}
++	rpmtdFreeData(&td);
++    }
++    return res;
++}
++
++static inline uint64_t rpmtdGetNumber(rpmtd td)
++{
++    uint64_t val = 0;
++    int ix;
++    assert(td != NULL);
++    ix = (td->ix >= 0 ? td->ix : 0);
++
++    switch (td->type) {
++    case RPM_INT64_TYPE:
++	val = *((uint64_t *) td->data + ix);
++	break;
++    case RPM_INT32_TYPE:
++	val = *((uint32_t *) td->data + ix);
++	break;
++    case RPM_INT16_TYPE:
++	val = *((uint16_t *) td->data + ix);
++	break;
++    case RPM_INT8_TYPE:
++    case RPM_CHAR_TYPE:
++	val = *((uint8_t *) td->data + ix);
++	break;
++    default:
++	break;
++    }
++    return val;
++}
++
++static inline uint64_t headerGetNumber(Header h, int32_t tag)
++{
++    uint64_t res = 0;
++    struct rpmtd_s td;
++
++    if (headerGet(h, tag, &td, HEADERGET_EXT)) {
++	if (rpmtdCount(&td) == 1) {
++	    res = rpmtdGetNumber(&td);
++	}
++	rpmtdFreeData(&td);
++    }
++    return res;
++}
++
+ static inline int
+ cr_compare_dependency(const char *dep1, const char *dep2)
+ {
+--- createrepo_c/src/parsepkg.c.orig	2013-12-01 15:00:42.000000000 +0100
++++ createrepo_c/src/parsepkg.c	2013-12-01 16:52:24.660513293 +0100
+@@ -26,14 +26,17 @@
+ #include <unistd.h>
+ #include <rpm/rpmts.h>
+ #include <rpm/rpmfi.h>
+-#include <rpm/rpmlib.h>
+ #include <rpm/rpmmacro.h>
+-#include <rpm/rpmkeyring.h>
++#include <rpm/rpmrc.h>
++#include <rpm/pkgio.h>
+ #include "error.h"
+ #include "parsehdr.h"
+ #include "misc.h"
+ #include "checksum.h"
+ 
++#define _RPMVSF_NOSIGNATURES (RPMVSF_NODSAHEADER | RPMVSF_NORSAHEADER | RPMVSF_NODSA | RPMVSF_NORSA)
++#define	_RPMVSF_NODIGESTS (RPMVSF_NOSHA1HEADER | RPMVSF_NOMD5HEADER | RPMVSF_NOSHA1 | RPMVSF_NOMD5)
++
+ volatile short cr_initialized = 0;
+ rpmts cr_ts = NULL;
+ 
+--- createrepo_c/src/CMakeLists.txt.orig	2013-12-01 15:00:42.000000000 +0100
++++ createrepo_c/src/CMakeLists.txt	2013-12-01 16:53:42.373843363 +0100
+@@ -55,6 +55,7 @@
+ TARGET_LINK_LIBRARIES(libcreaterepo_c ${LZMA_LIBRARIES})
+ TARGET_LINK_LIBRARIES(libcreaterepo_c ${OPENSSL_LIBRARIES})
+ TARGET_LINK_LIBRARIES(libcreaterepo_c ${RPMDB_LIBRARY})
++TARGET_LINK_LIBRARIES(libcreaterepo_c rpm)
+ TARGET_LINK_LIBRARIES(libcreaterepo_c ${SQLITE3_LIBRARIES})
+ TARGET_LINK_LIBRARIES(libcreaterepo_c ${ZLIB_LIBRARY})
+ 
