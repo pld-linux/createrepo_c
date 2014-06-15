@@ -118,8 +118,8 @@
  static inline int
  cr_compare_dependency(const char *dep1, const char *dep2)
  {
---- createrepo_c/src/parsepkg.c.orig	2013-12-01 15:00:42.000000000 +0100
-+++ createrepo_c/src/parsepkg.c	2013-12-01 16:52:24.660513293 +0100
+--- createrepo_c/src/parsepkg.c~	2014-05-06 15:58:35.000000000 +0300
++++ createrepo_c/src/parsepkg.c	2014-06-15 14:59:03.744966692 +0300
 @@ -26,14 +26,17 @@
  #include <unistd.h>
  #include <rpm/rpmts.h>
@@ -137,8 +137,8 @@
 +#define _RPMVSF_NOSIGNATURES (RPMVSF_NODSAHEADER | RPMVSF_NORSAHEADER | RPMVSF_NODSA | RPMVSF_NORSA)
 +#define	_RPMVSF_NODIGESTS (RPMVSF_NOSHA1HEADER | RPMVSF_NOMD5HEADER | RPMVSF_NOSHA1 | RPMVSF_NOMD5)
 +
- volatile short cr_initialized = 0;
  rpmts cr_ts = NULL;
+ 
  
 --- createrepo_c/src/CMakeLists.txt.orig	2013-12-01 15:00:42.000000000 +0100
 +++ createrepo_c/src/CMakeLists.txt	2013-12-01 16:53:42.373843363 +0100

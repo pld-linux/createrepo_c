@@ -2,18 +2,18 @@
 #
 # Conditional build:
 %bcond_without	tests	# make tests
-#
+
+%define		gitrev	7ef96a6
 Summary:	Creates a common metadata repository
 Summary(pl.UTF-8):	Tworzenie wspólnego repozytorium metadanych
 Name:		createrepo_c
-Version:	0.2.1
-%define	snap	20131129
-Release:	0.%{snap}.1
+Version:	0.4.0
+Release:	1
 License:	GPL v2+
 Group:		Applications/System
 # git clone https://github.com/Tojaj/createrepo_c
-Source0:	createrepo_c.tar.xz
-# Source0-md5:	afc0dabd7f75f2ad2d34a07966ee87ce
+Source0:	http://pkgs.fedoraproject.org/repo/pkgs/createrepo_c/%{name}-%{gitrev}.tar.xz/606d117677ab85e5a9ec15896db644c2/createrepo_c-%{gitrev}.tar.xz
+# Source0-md5:	606d117677ab85e5a9ec15896db644c2
 Patch0:		%{name}-rpm5.patch
 URL:		https://github.com/Tojaj/createrepo_c
 BuildRequires:	bzip2-devel
@@ -82,8 +82,8 @@ This package contains the createrepo_c C header files. These
 development files are for easy manipulation with a repodata.
 
 %description devel -l pl.UTF-8
-Ten pakiet zawiera pliki nagłówkowe C biblioteki createrepo_c. Mają
-na celu łatwe operowanie na danych repozytorium (repodata).
+Ten pakiet zawiera pliki nagłówkowe C biblioteki createrepo_c. Mają na
+celu łatwe operowanie na danych repozytorium (repodata).
 
 %package apidocs
 Summary:	API documentation for createrepo_c library
@@ -161,6 +161,7 @@ rm -rf $RPM_BUILD_ROOT
 %attr(755,root,root) %{_bindir}/modifyrepo_c
 %{_mandir}/man8/createrepo_c.8*
 %{_mandir}/man8/mergerepo_c.8*
+%{_mandir}/man8/modifyrepo_c.8*
 
 %files libs
 %defattr(644,root,root,755)
