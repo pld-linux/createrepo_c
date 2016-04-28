@@ -1,0 +1,20 @@
+--- createrepo_c/doc/python/CMakeLists.txt.orig	2014-05-06 14:58:35.000000000 +0200
++++ createrepo_c/doc/python/CMakeLists.txt	2016-04-28 18:19:52.853165535 +0200
+@@ -1,5 +1,5 @@
+ ADD_CUSTOM_TARGET (doc-python
+-    PYTHONPATH=${CMAKE_BINARY_DIR}/src/python sphinx-build -E -b html
++    PYTHONPATH=${CMAKE_BINARY_DIR}/src/python sphinx-build-2 -E -b html
+                   ${CMAKE_CURRENT_SOURCE_DIR} ${CMAKE_CURRENT_BINARY_DIR}
+                   COMMENT "Building Python API documentation with Sphinx")
+ 
+--- createrepo_c/src/python/CMakeLists.txt.orig	2014-05-06 14:58:35.000000000 +0200
++++ createrepo_c/src/python/CMakeLists.txt	2016-04-28 18:25:18.773151731 +0200
+@@ -1,6 +1,6 @@
+-FIND_PACKAGE (PythonLibs 2)
+ FIND_PACKAGE (PythonInterp 2 REQUIRED)
+-EXECUTE_PROCESS(COMMAND ${PYTHON_EXECUTABLE} -c "from sys import stdout; from distutils import sysconfig; stdout.write(sysconfig.get_python_lib(True))" OUTPUT_VARIABLE PYTHON_INSTALL_DIR)
++FIND_PACKAGE (PythonLibs 2)
++EXECUTE_PROCESS(COMMAND ${PYTHON_EXECUTABLE} -c "from sys import stdout; from distutils import sysconfig; stdout.write(sysconfig.get_python_lib(True, prefix='/usr'))" OUTPUT_VARIABLE PYTHON_INSTALL_DIR)
+ INCLUDE_DIRECTORIES (${PYTHON_INCLUDE_PATH})
+ 
+ MESSAGE(STATUS "Python install dir is ${PYTHON_INSTALL_DIR}")

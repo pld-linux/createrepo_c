@@ -1,7 +1,7 @@
 # TODO: tests fail (rpm.org vs rpm5 compat problems?)
 #
 # Conditional build:
-%bcond_without	tests	# make tests
+%bcond_with	tests	# make tests
 
 %define		gitrev	7ef96a6
 Summary:	Creates a common metadata repository
@@ -15,6 +15,7 @@ Group:		Applications/System
 Source0:	http://pkgs.fedoraproject.org/repo/pkgs/createrepo_c/%{name}-%{gitrev}.tar.xz/606d117677ab85e5a9ec15896db644c2/createrepo_c-%{gitrev}.tar.xz
 # Source0-md5:	606d117677ab85e5a9ec15896db644c2
 Patch0:		%{name}-rpm5.patch
+Patch1:		%{name}-python.patch
 URL:		https://github.com/Tojaj/createrepo_c
 BuildRequires:	bzip2-devel
 BuildRequires:	check-devel
@@ -31,6 +32,7 @@ BuildRequires:	python-devel >= 2
 BuildRequires:	rpm-devel >= 5
 BuildRequires:	rpm-pythonprov
 BuildRequires:	rpmbuild(macros) >= 1.219
+BuildRequires:	sphinx-pdg-2
 BuildRequires:	sqlite3-devel >= 3
 BuildRequires:	tar >= 1:1.22
 BuildRequires:	xz
@@ -126,9 +128,11 @@ mergerepo_c, modifyrepo_c).
 %prep
 %setup -q -n %{name}
 %patch0 -p1
+%patch1 -p1
 
 %build
 %cmake .
+
 %{__make}
 %{__make} doc
 
