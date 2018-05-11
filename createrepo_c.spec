@@ -1,22 +1,23 @@
 # TODO: tests fail (rpm.org vs rpm5 compat problems?)
 #
 # Conditional build:
+%bcond_without	python3	# CPython 3.x module
 %bcond_with	tests	# make tests
 
-%define		gitrev	7ef96a6
 Summary:	Creates a common metadata repository
 Summary(pl.UTF-8):	Tworzenie wspólnego repozytorium metadanych
 Name:		createrepo_c
-Version:	0.4.0
+Version:	0.10.0
 Release:	1
 License:	GPL v2+
 Group:		Applications/System
-# git clone https://github.com/Tojaj/createrepo_c
-Source0:	http://pkgs.fedoraproject.org/repo/pkgs/createrepo_c/%{name}-%{gitrev}.tar.xz/606d117677ab85e5a9ec15896db644c2/createrepo_c-%{gitrev}.tar.xz
-# Source0-md5:	606d117677ab85e5a9ec15896db644c2
+#Source0Download: https://github.com/rpm-software-management/createrepo_c/releases
+Source0:	https://github.com/rpm-software-management/createrepo_c/archive/%{version}/%{name}-%{version}.tar.gz
+# Source0-md5:	2e14b3e5d289875b894000ab1e54f1ec
 Patch0:		%{name}-rpm5.patch
 Patch1:		%{name}-python.patch
-URL:		https://github.com/Tojaj/createrepo_c
+Patch2:		%{name}-include.patch
+URL:		https://github.com/rpm-software-management/createrepo_c
 BuildRequires:	bzip2-devel
 BuildRequires:	check-devel
 BuildRequires:	cmake >= 2.6
@@ -29,13 +30,15 @@ BuildRequires:	libxml2-devel >= 2
 BuildRequires:	openssl-devel
 BuildRequires:	python-devel >= 2
 %{?with_tests:BuildRequires:	python-nose}
+%if %{with python3}
+BuildRequires:	python3-devel >= 1:3.2
+%{?with_tests:BuildRequires:	python3-nose}
+%endif
 BuildRequires:	rpm-devel >= 5
 BuildRequires:	rpm-pythonprov
 BuildRequires:	rpmbuild(macros) >= 1.219
 BuildRequires:	sphinx-pdg-2
 BuildRequires:	sqlite3-devel >= 3
-BuildRequires:	tar >= 1:1.22
-BuildRequires:	xz
 BuildRequires:	xz-devel
 BuildRequires:	zlib-devel
 Requires:	%{name}-libs = %{version}-%{release}
@@ -99,16 +102,28 @@ API documentation for createrepo_c library.
 Dokumentacja API biblioteki createrepo_c.
 
 %package -n python-createrepo_c
-Summary:	Python bindings for the createrepo_c library
-Summary(pl.UTF-8):	Wiązania Pythona do biblioteki createrepo_c
+Summary:	Python 2 bindings for the createrepo_c library
+Summary(pl.UTF-8):	Wiązania Pythona 2 do biblioteki createrepo_c
 Group:		Development/Languages/Python
 Requires:	%{name}-libs = %{version}-%{release}
 
 %description -n python-createrepo_c
-Python bindings for the createrepo_c library.
+Python 2 bindings for the createrepo_c library.
 
 %description -n python-createrepo_c -l pl.UTF-8
-Wiązania Pythona do biblioteki createrepo_c.
+Wiązania Pythona 2 do biblioteki createrepo_c.
+
+%package -n python3-createrepo_c
+Summary:	Python 3 bindings for the createrepo_c library
+Summary(pl.UTF-8):	Wiązania Pythona 3 do biblioteki createrepo_c
+Group:		Development/Languages/Python
+Requires:	%{name}-libs = %{version}-%{release}
+
+%description -n python3-createrepo_c
+Python 3 bindings for the createrepo_c library.
+
+%description -n python3-createrepo_c -l pl.UTF-8
+Wiązania Pythona 3 do biblioteki createrepo_c.
 
 %package -n bash-completion-createrepo_c
 Summary:	Bash completion for createrepo_c commands
@@ -126,12 +141,16 @@ Bashowe uzupełnianie dla poleceń createrepo_c (createrepo_c,
 mergerepo_c, modifyrepo_c).
 
 %prep
-%setup -q -n %{name}
+%setup -q
 %patch0 -p1
 %patch1 -p1
+%patch2 -p1
 
 %build
-%cmake .
+install -d build %{?with_python3:build-py3}
+
+cd build
+%cmake ..
 
 %{__make}
 %{__make} doc
@@ -141,11 +160,34 @@ mergerepo_c, modifyrepo_c).
 %{__make} test \
 	ARGS="-V"
 %endif
+cd ..
+
+%if %{with python3}
+cd build-py3
+%cmake .. \
+	-DPYTHON_DESIRED=3
+
+%{__make}
+
+%if %{with tests}
+%{__make} tests
+%{__make} test \
+	ARGS="-V"
+%endif
+cd ..
+%endif
 
 %install
 rm -rf $RPM_BUILD_ROOT
 
-%{__make} install \
+%if %{with python3}
+%{__make} -C build-py3 install \
+	DESTDIR=$RPM_BUILD_ROOT
+%py3_comp $RPM_BUILD_ROOT%{py3_sitedir}/createrepo_c
+%py3_ocomp $RPM_BUILD_ROOT%{py3_sitedir}/createrepo_c
+%endif
+
+%{__make} -C build install \
 	DESTDIR=$RPM_BUILD_ROOT
 
 %py_comp $RPM_BUILD_ROOT%{py_sitedir}/createrepo_c
@@ -163,9 +205,11 @@ rm -rf $RPM_BUILD_ROOT
 %attr(755,root,root) %{_bindir}/createrepo_c
 %attr(755,root,root) %{_bindir}/mergerepo_c
 %attr(755,root,root) %{_bindir}/modifyrepo_c
+%attr(755,root,root) %{_bindir}/sqliterepo_c
 %{_mandir}/man8/createrepo_c.8*
 %{_mandir}/man8/mergerepo_c.8*
 %{_mandir}/man8/modifyrepo_c.8*
+%{_mandir}/man8/sqliterepo_c.8*
 
 %files libs
 %defattr(644,root,root,755)
@@ -181,13 +225,22 @@ rm -rf $RPM_BUILD_ROOT
 
 %files apidocs
 %defattr(644,root,root,755)
-%doc doc/html
+%doc build/doc/html
 
 %files -n python-createrepo_c
 %defattr(644,root,root,755)
 %dir %{py_sitedir}/createrepo_c
-%attr(755,root,root) %{py_sitedir}/createrepo_c/_createrepo_cmodule.so
+%attr(755,root,root) %{py_sitedir}/createrepo_c/_createrepo_c.so
 %{py_sitedir}/createrepo_c/__init__.py[co]
+
+%if %{with python3}
+%files -n python3-createrepo_c
+%defattr(644,root,root,755)
+%dir %{py3_sitedir}/createrepo_c
+%attr(755,root,root) %{py3_sitedir}/createrepo_c/_createrepo_c.so
+%{py3_sitedir}/createrepo_c/__init__.py
+%{py3_sitedir}/createrepo_c/__pycache__
+%endif
 
 %files -n bash-completion-createrepo_c
 %defattr(644,root,root,755)

@@ -1,14 +1,15 @@
---- createrepo_c/src/misc.c.orig	2013-12-01 15:00:42.000000000 +0100
-+++ createrepo_c/src/misc.c	2013-12-01 16:18:48.713931227 +0100
-@@ -30,7 +30,7 @@
- #include <ftw.h>
- #include <time.h>
+--- createrepo_c-0.10.0/src/misc.c.orig	2018-05-11 19:45:05.629153195 +0200
++++ createrepo_c-0.10.0/src/misc.c	2018-05-11 20:03:44.592473749 +0200
+@@ -26,7 +26,8 @@
  #include <curl/curl.h>
+ #include <errno.h>
+ #include <ftw.h>
 -#include <rpm/rpmlib.h>
++#include <rpm/rpmiotypes.h>
 +#include <rpm/rpmevr.h>
- #include "error.h"
- #include "misc.h"
- 
+ #include <stdio.h>
+ #include <stdlib.h>
+ #include <string.h>
 --- createrepo_c/CMakeLists.txt.orig	2013-12-01 15:00:42.000000000 +0100
 +++ createrepo_c/CMakeLists.txt	2013-12-01 16:21:27.510591230 +0100
 @@ -39,7 +39,7 @@
@@ -20,17 +21,17 @@
  
  # rpm:
  
---- createrepo_c/src/parsehdr.h.orig	2013-12-01 15:00:42.000000000 +0100
-+++ createrepo_c/src/parsehdr.h	2013-12-01 16:55:23.000505810 +0100
-@@ -24,7 +24,7 @@
- extern "C" {
+--- createrepo_c-0.10.0/src/parsehdr.h.orig	2018-05-11 19:45:05.632486529 +0200
++++ createrepo_c-0.10.0/src/parsehdr.h	2018-05-11 20:04:26.635806605 +0200
+@@ -25,7 +25,7 @@ extern "C" {
  #endif
  
+ #include <glib.h>
 -#include <rpm/rpmlib.h>
 +#include <rpm/rpmtag.h>
- #include <glib.h>
  #include "package.h"
- #include "xml_dump.h"
+ 
+ /** \defgroup   parsehdr         Header parser API.
 --- createrepo_c/src/parsehdr.c.orig	2013-12-01 15:00:42.000000000 +0100
 +++ createrepo_c/src/parsehdr.c	2013-12-01 16:33:26.753894379 +0100
 @@ -19,6 +19,7 @@
@@ -118,9 +119,9 @@
  static inline int
  cr_compare_dependency(const char *dep1, const char *dep2)
  {
---- createrepo_c/src/parsepkg.c~	2014-05-06 15:58:35.000000000 +0300
-+++ createrepo_c/src/parsepkg.c	2014-06-15 14:59:03.744966692 +0300
-@@ -26,14 +26,17 @@
+--- createrepo_c-0.10.0/src/parsepkg.c.orig	2018-05-11 19:45:05.632486529 +0200
++++ createrepo_c-0.10.0/src/parsepkg.c	2018-05-11 20:05:28.922472561 +0200
+@@ -26,9 +26,9 @@
  #include <unistd.h>
  #include <rpm/rpmts.h>
  #include <rpm/rpmfi.h>
@@ -131,8 +132,10 @@
 +#include <rpm/pkgio.h>
  #include "error.h"
  #include "parsehdr.h"
- #include "misc.h"
- #include "checksum.h"
+ #include "parsepkg.h"
+@@ -38,6 +38,9 @@
+ #define ERR_DOMAIN      CREATEREPO_C_ERROR
+ 
  
 +#define _RPMVSF_NOSIGNATURES (RPMVSF_NODSAHEADER | RPMVSF_NORSAHEADER | RPMVSF_NODSA | RPMVSF_NORSA)
 +#define	_RPMVSF_NODIGESTS (RPMVSF_NOSHA1HEADER | RPMVSF_NOMD5HEADER | RPMVSF_NOSHA1 | RPMVSF_NOMD5)
@@ -150,3 +153,24 @@
  TARGET_LINK_LIBRARIES(libcreaterepo_c ${SQLITE3_LIBRARIES})
  TARGET_LINK_LIBRARIES(libcreaterepo_c ${ZLIB_LIBRARY})
  
+
+--- createrepo_c-0.10.0/src/deltarpms.h.in.orig	2016-01-05 13:46:28.000000000 +0100
++++ createrepo_c-0.10.0/src/deltarpms.h.in	2018-05-11 20:54:15.319105812 +0200
+@@ -25,7 +25,6 @@ extern "C" {
+ #endif
+ 
+ #include <glib.h>
+-#include <rpm/rpmlib.h>
+ #include "package.h"
+ #include "parsehdr.h"
+ #include "xml_file.h"
+--- createrepo_c-0.10.0/src/dumper_thread.h.orig	2016-01-05 13:46:28.000000000 +0100
++++ createrepo_c-0.10.0/src/dumper_thread.h	2018-05-11 20:56:44.322437446 +0200
+@@ -25,7 +25,6 @@ extern "C" {
+ #endif
+ 
+ #include <glib.h>
+-#include <rpm/rpmlib.h>
+ #include "load_metadata.h"
+ #include "locate_metadata.h"
+ #include "misc.h"
