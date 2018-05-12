@@ -17,6 +17,7 @@ Source0:	https://github.com/rpm-software-management/createrepo_c/archive/%{versi
 Patch0:		%{name}-rpm5.patch
 Patch1:		%{name}-python.patch
 Patch2:		%{name}-include.patch
+Patch3:		%{name}-bashcompdir.patch
 URL:		https://github.com/rpm-software-management/createrepo_c
 BuildRequires:	bzip2-devel
 BuildRequires:	check-devel
@@ -130,7 +131,7 @@ Summary:	Bash completion for createrepo_c commands
 Summary(pl.UTF-8):	Bashowe uzupełnianie dla poleceń createrepo_c
 Group:		Applications/Shells
 Requires:	%{name} = %{version}-%{release}
-Requires:	bash-completion
+Requires:	bash-completion >= 2.0
 
 %description -n bash-completion-createrepo_c
 Bash completion for createrepo_c commands (createrepo_c, mergerepo_c,
@@ -150,7 +151,8 @@ mergerepo_c, modifyrepo_c).
 install -d build %{?with_python3:build-py3}
 
 cd build
-%cmake ..
+%cmake .. \
+	-DBASHCOMP_DIR=%{bashcomp_dir}
 
 %{__make}
 %{__make} doc
@@ -165,6 +167,7 @@ cd ..
 %if %{with python3}
 cd build-py3
 %cmake .. \
+	-DBASHCOMP_DIR=%{bashcomp_dir} \
 	-DPYTHON_DESIRED=3
 
 %{__make}
@@ -244,4 +247,7 @@ rm -rf $RPM_BUILD_ROOT
 
 %files -n bash-completion-createrepo_c
 %defattr(644,root,root,755)
-/etc/bash_completion.d/createrepo_c.bash
+%{bash_compdir}/createrepo_c
+%{bash_compdir}/mergerepo_c
+%{bash_compdir}/modifyrepo_c
+%{bash_compdir}/sqliterepo_c

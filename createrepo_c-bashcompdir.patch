@@ -1,0 +1,34 @@
+--- /home/users/qboosh/rpm/BUILD/createrepo_c-0.10.0/CMakeLists.txt.orig	2018-05-11 22:44:34.072652081 +0200
++++ /home/users/qboosh/rpm/BUILD/createrepo_c-0.10.0/CMakeLists.txt	2018-05-12 08:30:25.683823187 +0200
+@@ -98,21 +98,25 @@
+ 
+ # Other files
+ 
++if (NOT BASHCOMP_DIR)
+ pkg_check_modules(BASHCOMP bash-completion)
+ if (BASHCOMP_FOUND)
+     execute_process(COMMAND ${PKG_CONFIG_EXECUTABLE} --variable=completionsdir bash-completion OUTPUT_VARIABLE BASHCOMP_DIR OUTPUT_STRIP_TRAILING_WHITESPACE)
+-    message("Bash completion directory: ${BASHCOMP_DIR}")
++ELSE (BASHCOMP_FOUND)
++    set(BASHCOMP_DIR "/etc/bash_completion.d")
++endif (BASHCOMP_FOUND)
++endif (NOT BASHCOMP_DIR)
++message("Bash completion directory: ${BASHCOMP_DIR}")
++if (BASHCOMP_DIR STREQUAL "/etc/bash_completion.d")
++    INSTALL(FILES createrepo_c.bash DESTINATION ${BASHCOMP_DIR})
++else (BASHCOMP_DIR STREQUAL "/etc/bash_completion.d")
+     INSTALL(FILES createrepo_c.bash DESTINATION ${BASHCOMP_DIR} RENAME createrepo_c)
+     INSTALL(CODE "
+         execute_process(COMMAND ${CMAKE_COMMAND} -E create_symlink createrepo_c \$ENV{DESTDIR}${BASHCOMP_DIR}/mergerepo_c)
+         execute_process(COMMAND ${CMAKE_COMMAND} -E create_symlink createrepo_c \$ENV{DESTDIR}${BASHCOMP_DIR}/modifyrepo_c)
+         execute_process(COMMAND ${CMAKE_COMMAND} -E create_symlink createrepo_c \$ENV{DESTDIR}${BASHCOMP_DIR}/sqliterepo_c)
+         ")
+-ELSE (BASHCOMP_FOUND)
+-    INSTALL(FILES createrepo_c.bash DESTINATION "/etc/bash_completion.d")
+-    message("Bash completion directory: /etc/bash_completion.d")
+-endif (BASHCOMP_FOUND)
+-
++endif (BASHCOMP_DIR STREQUAL "/etc/bash_completion.d")
+ 
+ # Gen manpage
+ 
