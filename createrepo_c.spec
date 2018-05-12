@@ -37,7 +37,7 @@ BuildRequires:	python3-devel >= 1:3.2
 %endif
 BuildRequires:	rpm-devel >= 5
 BuildRequires:	rpm-pythonprov
-BuildRequires:	rpmbuild(macros) >= 1.219
+BuildRequires:	rpmbuild(macros) >= 1.673
 BuildRequires:	sphinx-pdg-2
 BuildRequires:	sqlite3-devel >= 3
 BuildRequires:	xz-devel
@@ -146,13 +146,14 @@ mergerepo_c, modifyrepo_c).
 %patch0 -p1
 %patch1 -p1
 %patch2 -p1
+%patch3 -p1
 
 %build
 install -d build %{?with_python3:build-py3}
 
 cd build
 %cmake .. \
-	-DBASHCOMP_DIR=%{bashcomp_dir}
+	-DBASHCOMP_DIR=%{bash_compdir}
 
 %{__make}
 %{__make} doc
@@ -167,7 +168,7 @@ cd ..
 %if %{with python3}
 cd build-py3
 %cmake .. \
-	-DBASHCOMP_DIR=%{bashcomp_dir} \
+	-DBASHCOMP_DIR=%{bash_compdir} \
 	-DPYTHON_DESIRED=3
 
 %{__make}

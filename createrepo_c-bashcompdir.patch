@@ -1,5 +1,5 @@
---- /home/users/qboosh/rpm/BUILD/createrepo_c-0.10.0/CMakeLists.txt.orig	2018-05-11 22:44:34.072652081 +0200
-+++ /home/users/qboosh/rpm/BUILD/createrepo_c-0.10.0/CMakeLists.txt	2018-05-12 08:30:25.683823187 +0200
+--- createrepo_c-0.10.0/CMakeLists.txt.orig	2018-05-11 22:44:34.072652081 +0200
++++ createrepo_c-0.10.0/CMakeLists.txt	2018-05-12 08:30:25.683823187 +0200
 @@ -98,21 +98,25 @@
  
  # Other files
