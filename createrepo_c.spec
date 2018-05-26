@@ -1,4 +1,6 @@
-# TODO: tests fail (rpm.org vs rpm5 compat problems?)
+# TODO:
+# - tests fail (rpm.org vs rpm5 compat problems?)
+# - drpm support?
 #
 # Conditional build:
 %bcond_without	python3	# CPython 3.x module
@@ -24,6 +26,7 @@ BuildRequires:	check-devel
 BuildRequires:	cmake >= 2.6
 BuildRequires:	curl-devel
 BuildRequires:	doxygen
+#BuildRequires:	drpm-devel
 BuildRequires:	expat-devel
 BuildRequires:	glib2-devel >= 1:2.22.0
 BuildRequires:	libmagic-devel
