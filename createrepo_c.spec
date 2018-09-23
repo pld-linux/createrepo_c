@@ -10,7 +10,7 @@ Summary:	Creates a common metadata repository
 Summary(pl.UTF-8):	Tworzenie wspólnego repozytorium metadanych
 Name:		createrepo_c
 Version:	0.10.0
-Release:	3
+Release:	4
 License:	GPL v2+
 Group:		Applications/System
 #Source0Download: https://github.com/rpm-software-management/createrepo_c/releases
@@ -155,6 +155,7 @@ mergerepo_c, modifyrepo_c).
 install -d build %{?with_python3:build-py3}
 
 cd build
+CFLAGS="%{rpmcflags} -D_GNU_SOURCE=1"
 %cmake .. \
 	-DBASHCOMP_DIR=%{bash_compdir}
 
