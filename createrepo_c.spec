@@ -1,16 +1,16 @@
 # TODO:
-# - tests fail (rpm.org vs rpm5 compat problems?)
 # - drpm support?
 #
 # Conditional build:
 %bcond_without	python3	# CPython 3.x module
-%bcond_with	tests	# make tests
+%bcond_with	rpm5	# build with rpm5, tests may fail (rpm.org vs rpm5 compat problems?)
+%bcond_without	tests	# make tests
 
 Summary:	Creates a common metadata repository
 Summary(pl.UTF-8):	Tworzenie wspólnego repozytorium metadanych
 Name:		createrepo_c
 Version:	0.10.0
-Release:	5
+Release:	6
 License:	GPL v2+
 Group:		Applications/System
 #Source0Download: https://github.com/rpm-software-management/createrepo_c/releases
@@ -38,7 +38,7 @@ BuildRequires:	python-devel >= 2
 BuildRequires:	python3-devel >= 1:3.2
 %{?with_tests:BuildRequires:	python3-nose}
 %endif
-BuildRequires:	rpm-devel >= 5
+BuildRequires:	rpm-devel
 BuildRequires:	rpm-pythonprov
 BuildRequires:	rpmbuild(macros) >= 1.673
 BuildRequires:	sphinx-pdg-2
@@ -81,7 +81,7 @@ Requires:	expat-devel
 Requires:	glib2-devel >= 1:2.22.0
 Requires:	libmagic-devel
 Requires:	libxml2-devel >= 2
-Requires:	rpm-devel >= 5
+Requires:	rpm-devel
 Requires:	sqlite3-devel >= 3
 Requires:	xz-devel
 Requires:	zlib-devel
@@ -146,7 +146,7 @@ mergerepo_c, modifyrepo_c).
 
 %prep
 %setup -q
-%patch0 -p1
+%{?with_rpm5:%patch0 -p1}
 %patch1 -p1
 %patch2 -p1
 %patch3 -p1
