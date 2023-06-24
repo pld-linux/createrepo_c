@@ -19,7 +19,7 @@ Patch0:		%{name}-rpm5.patch
 URL:		https://github.com/rpm-software-management/createrepo_c
 BuildRequires:	bzip2-devel
 BuildRequires:	check-devel
-BuildRequires:	cmake >= 2.6
+BuildRequires:	cmake >= 2.8.10
 BuildRequires:	curl-devel
 BuildRequires:	doxygen
 #BuildRequires:	drpm-devel
