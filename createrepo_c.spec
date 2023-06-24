@@ -30,6 +30,7 @@ BuildRequires:	libxml2-devel >= 2
 BuildRequires:	openssl-devel
 %{?with_tests:BuildRequires:	python-nose}
 BuildRequires:	python3-devel >= 1:3.2
+BuildRequires:	python3-modules
 %{?with_tests:BuildRequires:	python3-nose}
 BuildRequires:	rpm-build >= 4.6
 BuildRequires:	rpm-devel
