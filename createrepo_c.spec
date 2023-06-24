@@ -119,7 +119,7 @@ Summary:	Bash completion for createrepo_c commands
 Summary(pl.UTF-8):	Bashowe uzupełnianie dla poleceń createrepo_c
 Group:		Applications/Shells
 Requires:	%{name} = %{version}-%{release}
-Requires:	bash-completion >= 2.0
+Requires:	bash-completion >= 1:2.0
 BuildArch:	noarch
 
 %description -n bash-completion-createrepo_c
