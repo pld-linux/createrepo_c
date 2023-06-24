@@ -16,6 +16,7 @@ Group:		Applications/System
 Source0:	https://github.com/rpm-software-management/createrepo_c/archive/%{version}/%{name}-%{version}.tar.gz
 # Source0-md5:	1c7de898d4c13901aae8b672bd1e812e
 Patch0:		%{name}-rpm5.patch
+Patch1:		%{name}-no-c23.patch
 URL:		https://github.com/rpm-software-management/createrepo_c
 BuildRequires:	bash-completion-devel >= 1:2.0
 BuildRequires:	bzip2-devel
@@ -136,6 +137,7 @@ mergerepo_c, modifyrepo_c).
 %prep
 %setup -q
 %{?with_rpm5:%patch0 -p1}
+%patch1 -p1
 
 %build
 install -d build
@@ -158,6 +160,7 @@ rm -rf $RPM_BUILD_ROOT
 
 %{__make} -C build install \
 	DESTDIR=$RPM_BUILD_ROOT
+
 %py3_comp $RPM_BUILD_ROOT%{py3_sitedir}/createrepo_c
 %py3_ocomp $RPM_BUILD_ROOT%{py3_sitedir}/createrepo_c
 
