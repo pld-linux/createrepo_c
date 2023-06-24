@@ -17,15 +17,15 @@ Source0:	https://github.com/rpm-software-management/createrepo_c/archive/%{versi
 # Source0-md5:	1c7de898d4c13901aae8b672bd1e812e
 Patch0:		%{name}-rpm5.patch
 URL:		https://github.com/rpm-software-management/createrepo_c
+BuildRequires:	bash-completion-devel >= 1:2.0
 BuildRequires:	bzip2-devel
-BuildRequires:	check-devel
 BuildRequires:	cmake >= 2.8.12
 BuildRequires:	curl-devel
 BuildRequires:	doxygen
 #BuildRequires:	drpm-devel
-BuildRequires:	expat-devel
 BuildRequires:	glib2-devel >= 1:2.22.0
 BuildRequires:	libmagic-devel >= 5.40-2
+BuildRequires:	libmodulemd-devel
 BuildRequires:	libxml2-devel >= 2
 BuildRequires:	openssl-devel
 BuildRequires:	pkgconfig
@@ -37,9 +37,10 @@ BuildRequires:	rpm-build >= 4.6
 BuildRequires:	rpm-devel
 BuildRequires:	rpm-pythonprov
 BuildRequires:	rpmbuild(macros) >= 1.673
-BuildRequires:	sphinx-pdg-2
+BuildRequires:	sphinx-pdg
 BuildRequires:	sqlite3-devel >= 3
 BuildRequires:	xz-devel
+BuildRequires:	zchunk-devel
 BuildRequires:	zlib-devel
 %{?with_tests:BuildRequires:	zchunk}
 Requires:	%{name}-libs = %{version}-%{release}
