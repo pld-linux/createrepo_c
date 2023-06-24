@@ -31,6 +31,7 @@ BuildRequires:	openssl-devel
 %{?with_tests:BuildRequires:	python-nose}
 BuildRequires:	python3-devel >= 1:3.2
 %{?with_tests:BuildRequires:	python3-nose}
+BuildRequires:	rpm-build >= 4.6
 BuildRequires:	rpm-devel
 BuildRequires:	rpm-pythonprov
 BuildRequires:	rpmbuild(macros) >= 1.673
@@ -92,6 +93,7 @@ celu łatwe operowanie na danych repozytorium (repodata).
 Summary:	API documentation for createrepo_c library
 Summary(pl.UTF-8):	Dokumentacja API biblioteki createrepo_c
 Group:		Documentation
+BuildArch:	noarch
 
 %description apidocs
 API documentation for createrepo_c library.
@@ -118,6 +120,7 @@ Summary(pl.UTF-8):	Bashowe uzupełnianie dla poleceń createrepo_c
 Group:		Applications/Shells
 Requires:	%{name} = %{version}-%{release}
 Requires:	bash-completion >= 2.0
+BuildArch:	noarch
 
 %description -n bash-completion-createrepo_c
 Bash completion for createrepo_c commands (createrepo_c, mergerepo_c,
