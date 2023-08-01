@@ -8,15 +8,14 @@
 Summary:	Creates a common metadata repository
 Summary(pl.UTF-8):	Tworzenie wspólnego repozytorium metadanych
 Name:		createrepo_c
-Version:	0.21.1
+Version:	1.0.0
 Release:	1
 License:	GPL v2+
 Group:		Applications/System
 #Source0Download: https://github.com/rpm-software-management/createrepo_c/releases
 Source0:	https://github.com/rpm-software-management/createrepo_c/archive/%{version}/%{name}-%{version}.tar.gz
-# Source0-md5:	1c7de898d4c13901aae8b672bd1e812e
+# Source0-md5:	253bb04c65351f4e4137661155bca11e
 Patch0:		%{name}-rpm5.patch
-Patch1:		%{name}-no-c23.patch
 URL:		https://github.com/rpm-software-management/createrepo_c
 BuildRequires:	bash-completion-devel >= 1:2.0
 BuildRequires:	bzip2-devel
@@ -43,6 +42,7 @@ BuildRequires:	sqlite3-devel >= 3
 BuildRequires:	xz-devel
 BuildRequires:	zchunk-devel
 BuildRequires:	zlib-devel
+BuildRequires:	zstd-devel
 %{?with_tests:BuildRequires:	zchunk}
 Requires:	%{name}-libs = %{version}-%{release}
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
@@ -84,6 +84,7 @@ Requires:	rpm-devel
 Requires:	sqlite3-devel >= 3
 Requires:	xz-devel
 Requires:	zlib-devel
+Requires:	zstd-devel
 
 %description devel
 This package contains the createrepo_c C header files. These
@@ -137,7 +138,6 @@ mergerepo_c, modifyrepo_c).
 %prep
 %setup -q
 %{?with_rpm5:%patch0 -p1}
-%patch1 -p1
 
 %build
 install -d build
@@ -185,7 +185,7 @@ rm -rf $RPM_BUILD_ROOT
 %defattr(644,root,root,755)
 %doc AUTHORS README.md
 %attr(755,root,root) %{_libdir}/libcreaterepo_c.so.*.*.*
-%attr(755,root,root) %ghost %{_libdir}/libcreaterepo_c.so.0
+%attr(755,root,root) %ghost %{_libdir}/libcreaterepo_c.so.1
 
 %files devel
 %defattr(644,root,root,755)
