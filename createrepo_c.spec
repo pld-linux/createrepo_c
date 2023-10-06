@@ -8,13 +8,13 @@
 Summary:	Creates a common metadata repository
 Summary(pl.UTF-8):	Tworzenie wspólnego repozytorium metadanych
 Name:		createrepo_c
-Version:	1.0.0
+Version:	1.0.1
 Release:	1
 License:	GPL v2+
 Group:		Applications/System
 #Source0Download: https://github.com/rpm-software-management/createrepo_c/releases
 Source0:	https://github.com/rpm-software-management/createrepo_c/archive/%{version}/%{name}-%{version}.tar.gz
-# Source0-md5:	253bb04c65351f4e4137661155bca11e
+# Source0-md5:	087dff6b2b16bb2764c5a1704ee3a4b7
 Patch0:		%{name}-rpm5.patch
 URL:		https://github.com/rpm-software-management/createrepo_c
 BuildRequires:	bash-completion-devel >= 1:2.0
