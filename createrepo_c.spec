@@ -8,13 +8,13 @@
 Summary:	Creates a common metadata repository
 Summary(pl.UTF-8):	Tworzenie wspólnego repozytorium metadanych
 Name:		createrepo_c
-Version:	1.0.1
+Version:	1.0.2
 Release:	1
 License:	GPL v2+
 Group:		Applications/System
 #Source0Download: https://github.com/rpm-software-management/createrepo_c/releases
 Source0:	https://github.com/rpm-software-management/createrepo_c/archive/%{version}/%{name}-%{version}.tar.gz
-# Source0-md5:	087dff6b2b16bb2764c5a1704ee3a4b7
+# Source0-md5:	e2fefccabf170c29ccff031b48086b01
 Patch0:		%{name}-rpm5.patch
 URL:		https://github.com/rpm-software-management/createrepo_c
 BuildRequires:	bash-completion-devel >= 1:2.0
@@ -24,7 +24,6 @@ BuildRequires:	curl-devel
 BuildRequires:	doxygen
 #BuildRequires:	drpm-devel
 BuildRequires:	glib2-devel >= 1:2.22.0
-BuildRequires:	libmagic-devel >= 5.40-2
 BuildRequires:	libmodulemd-devel
 BuildRequires:	libxml2-devel >= 2
 BuildRequires:	openssl-devel
@@ -78,7 +77,6 @@ Requires:	bzip2-devel
 Requires:	curl-devel
 Requires:	expat-devel
 Requires:	glib2-devel >= 1:2.22.0
-Requires:	libmagic-devel
 Requires:	libxml2-devel >= 2
 Requires:	rpm-devel
 Requires:	sqlite3-devel >= 3
