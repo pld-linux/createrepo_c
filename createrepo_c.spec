@@ -8,13 +8,13 @@
 Summary:	Creates a common metadata repository
 Summary(pl.UTF-8):	Tworzenie wspólnego repozytorium metadanych
 Name:		createrepo_c
-Version:	1.0.2
+Version:	1.0.3
 Release:	1
 License:	GPL v2+
 Group:		Applications/System
 #Source0Download: https://github.com/rpm-software-management/createrepo_c/releases
 Source0:	https://github.com/rpm-software-management/createrepo_c/archive/%{version}/%{name}-%{version}.tar.gz
-# Source0-md5:	e2fefccabf170c29ccff031b48086b01
+# Source0-md5:	fef459cd69f83b282c4053befcee9206
 Patch0:		%{name}-rpm5.patch
 URL:		https://github.com/rpm-software-management/createrepo_c
 BuildRequires:	bash-completion-devel >= 1:2.0
@@ -37,7 +37,7 @@ BuildRequires:	rpm-devel
 BuildRequires:	rpm-pythonprov
 BuildRequires:	rpmbuild(macros) >= 1.673
 BuildRequires:	sphinx-pdg
-BuildRequires:	sqlite3-devel >= 3
+BuildRequires:	sqlite3-devel >= 3.6.18
 BuildRequires:	xz-devel
 BuildRequires:	zchunk-devel
 BuildRequires:	zlib-devel
@@ -59,6 +59,7 @@ Summary:	Library for repodata manipulation
 Summary(pl.UTF-8):	Biblioteka do operacji na danych repozytorium
 Group:		Libraries
 Requires:	glib2 >= 1:2.22.0
+Requires:	sqlite3-libs >= 3.6.18
 
 %description libs
 This package contains the createrepo_c library for applications to
@@ -79,7 +80,7 @@ Requires:	expat-devel
 Requires:	glib2-devel >= 1:2.22.0
 Requires:	libxml2-devel >= 2
 Requires:	rpm-devel
-Requires:	sqlite3-devel >= 3
+Requires:	sqlite3-devel >= 3.6.18
 Requires:	xz-devel
 Requires:	zlib-devel
 Requires:	zstd-devel
