@@ -137,7 +137,7 @@ mergerepo_c, modifyrepo_c).
 
 %prep
 %setup -q
-%{?with_rpm5:%patch0 -p1}
+%{?with_rpm5:%patch -P0 -p1}
 
 %build
 install -d build
