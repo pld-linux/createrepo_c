@@ -1,38 +1,37 @@
-# TODO:
-# - drpm support?
 #
 # Conditional build:
 %bcond_with	rpm5	# build with rpm5, tests may fail (rpm.org vs rpm5 compat problems?)
+%bcond_with	drpm	# deltarpm support
 %bcond_without	tests	# make tests
 
 Summary:	Creates a common metadata repository
 Summary(pl.UTF-8):	Tworzenie wspólnego repozytorium metadanych
 Name:		createrepo_c
-Version:	1.2.1
+Version:	1.2.4
 Release:	1
 License:	GPL v2+
 Group:		Applications/System
 #Source0Download: https://github.com/rpm-software-management/createrepo_c/releases
 Source0:	https://github.com/rpm-software-management/createrepo_c/archive/%{version}/%{name}-%{version}.tar.gz
-# Source0-md5:	bf9dda4ff181c68b8bd6d063d5945edf
+# Source0-md5:	e3d12bbb15fcf02e0b25ad87703929c4
 Patch0:		%{name}-rpm5.patch
+Patch1:		%{name}-tests.patch
+Patch2:		%{name}-pc.patch
 URL:		https://github.com/rpm-software-management/createrepo_c
 BuildRequires:	bash-completion-devel >= 1:2.0
 BuildRequires:	bzip2-devel
-BuildRequires:	cmake >= 2.8.12
+BuildRequires:	cmake >= 3.7
 BuildRequires:	curl-devel
 BuildRequires:	doxygen
-#BuildRequires:	drpm-devel
+BuildRequires:	drpm-devel >= 0.4.0
+BuildRequires:	gcc >= 5:3.2
 BuildRequires:	glib2-devel >= 1:2.22.0
-BuildRequires:	libmodulemd-devel
+BuildRequires:	libmodulemd-devel >= 2.0
 BuildRequires:	libxml2-devel >= 2
 BuildRequires:	openssl-devel
 BuildRequires:	pkgconfig
-%{?with_tests:BuildRequires:	python-nose}
-BuildRequires:	python3-devel >= 1:3.2
-BuildRequires:	python3-modules
-%{?with_tests:BuildRequires:	python3-nose}
-BuildRequires:	python3-setuptools
+BuildRequires:	python3-devel >= 1:3.10
+BuildRequires:	python3-modules >= 1:3.10
 BuildRequires:	rpm-build >= 4.6
 BuildRequires:	rpm-devel
 BuildRequires:	rpm-pythonprov
@@ -138,12 +137,15 @@ mergerepo_c, modifyrepo_c).
 %prep
 %setup -q
 %{?with_rpm5:%patch -P0 -p1}
+%patch -P1 -p1
+%patch -P2 -p1
 
 %build
 install -d build
 cd build
 %cmake .. \
 	-DBASHCOMP_DIR=%{bash_compdir} \
+	%{?with_drpm:-DENABLE_DRPM=ON} \
 	-DPYTHON_DESIRED=3
 
 %{__make}
@@ -184,12 +186,12 @@ rm -rf $RPM_BUILD_ROOT
 %files libs
 %defattr(644,root,root,755)
 %doc AUTHORS README.md
-%attr(755,root,root) %{_libdir}/libcreaterepo_c.so.*.*.*
-%attr(755,root,root) %ghost %{_libdir}/libcreaterepo_c.so.1
+%{_libdir}/libcreaterepo_c.so.*.*.*
+%ghost %{_libdir}/libcreaterepo_c.so.1
 
 %files devel
 %defattr(644,root,root,755)
-%attr(755,root,root) %{_libdir}/libcreaterepo_c.so
+%{_libdir}/libcreaterepo_c.so
 %{_pkgconfigdir}/createrepo_c.pc
 %{_includedir}/createrepo_c
 
@@ -200,10 +202,10 @@ rm -rf $RPM_BUILD_ROOT
 %files -n python3-createrepo_c
 %defattr(644,root,root,755)
 %dir %{py3_sitedir}/createrepo_c
-%attr(755,root,root) %{py3_sitedir}/createrepo_c/_createrepo_c.so
+%{py3_sitedir}/createrepo_c/_createrepo_c.so
 %{py3_sitedir}/createrepo_c/__init__.py
 %{py3_sitedir}/createrepo_c/__pycache__
-%{py3_sitedir}/createrepo_c-%{version}-py*.egg-info
+%{py3_sitedir}/createrepo_c-%{version}.dist-info
 
 %files -n bash-completion-createrepo_c
 %defattr(644,root,root,755)

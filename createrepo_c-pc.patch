@@ -1,0 +1,9 @@
+--- createrepo_c-1.2.4/src/createrepo_c.pc.cmake.orig	2026-06-10 12:56:24.000000000 +0200
++++ createrepo_c-1.2.4/src/createrepo_c.pc.cmake	2026-09-27 09:43:12.240247890 +0200
+@@ -1,5 +1,5 @@
+ prefix=@CMAKE_INSTALL_PREFIX@
+-libdir=@LIB_INSTALL_DIR@
++libdir=@CMAKE_INSTALL_FULL_LIBDIR@
+ includedir=@CMAKE_INSTALL_PREFIX@/include
+ 
+ Name: createrepo_c
