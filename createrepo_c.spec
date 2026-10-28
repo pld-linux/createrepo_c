@@ -7,15 +7,14 @@
 Summary:	Creates a common metadata repository
 Summary(pl.UTF-8):	Tworzenie wspólnego repozytorium metadanych
 Name:		createrepo_c
-Version:	1.2.4
+Version:	1.2.6
 Release:	1
 License:	GPL v2+
 Group:		Applications/System
 #Source0Download: https://github.com/rpm-software-management/createrepo_c/releases
 Source0:	https://github.com/rpm-software-management/createrepo_c/archive/%{version}/%{name}-%{version}.tar.gz
-# Source0-md5:	e3d12bbb15fcf02e0b25ad87703929c4
+# Source0-md5:	69779f18e2add5d6fa8bbd0b61e4b7ff
 Patch0:		%{name}-rpm5.patch
-Patch1:		%{name}-tests.patch
 Patch2:		%{name}-pc.patch
 URL:		https://github.com/rpm-software-management/createrepo_c
 BuildRequires:	bash-completion-devel >= 1:2.0
@@ -23,7 +22,7 @@ BuildRequires:	bzip2-devel
 BuildRequires:	cmake >= 3.7
 BuildRequires:	curl-devel
 BuildRequires:	doxygen
-BuildRequires:	drpm-devel >= 0.4.0
+%{?with_drpm:BuildRequires:	drpm-devel >= 0.4.0}
 BuildRequires:	gcc >= 5:3.2
 BuildRequires:	glib2-devel >= 1:2.22.0
 BuildRequires:	libmodulemd-devel >= 2.0
@@ -36,7 +35,6 @@ BuildRequires:	rpm-build >= 4.6
 BuildRequires:	rpm-devel
 BuildRequires:	rpm-pythonprov
 BuildRequires:	rpmbuild(macros) >= 1.673
-BuildRequires:	sphinx-pdg
 BuildRequires:	sqlite3-devel >= 3.6.18
 BuildRequires:	xz-devel
 BuildRequires:	zchunk-devel
@@ -76,7 +74,6 @@ Group:		Development/Libraries
 Requires:	%{name}-libs = %{version}-%{release}
 Requires:	bzip2-devel
 Requires:	curl-devel
-Requires:	expat-devel
 Requires:	glib2-devel >= 1:2.22.0
 Requires:	libxml2-devel >= 2
 Requires:	rpm-devel
@@ -137,7 +134,6 @@ mergerepo_c, modifyrepo_c).
 %prep
 %setup -q
 %{?with_rpm5:%patch -P0 -p1}
-%patch -P1 -p1
 %patch -P2 -p1
 
 %build
@@ -149,7 +145,7 @@ cd build
 	-DPYTHON_DESIRED=3
 
 %{__make}
-%{__make} doc
+%{__make} doc-c
 
 %if %{with tests}
 %{__make} tests
